@@ -1,5 +1,5 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {BASE_COLORS, Project} from '@config/Constants';
 import {AppText} from '@components/ui';
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#2E3234',
+    color: BASE_COLORS.main.primary,
   },
   description: {
     color: BASE_COLORS.main.secondary,
