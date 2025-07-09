@@ -1,5 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Icon from '@react-native-vector-icons/octicons';
 
 import {TabStackParamList} from '@navigation/types';
 // import {
@@ -9,12 +10,13 @@ import {TabStackParamList} from '@navigation/types';
 //   TabBarIcon,
 //   TabBarLabel,
 // } from '@components/navigation';
-import {SCREEN_NAMES} from '@config/Constants';
+import {BASE_COLORS, SCREEN_NAMES} from '@config/Constants';
 
 import {styles} from './style';
 import {Text, View} from 'react-native';
 import {HomeScreen, ProjectsScreen, ReportsScreen} from '@screens/index';
 import {ProjectsStack} from '@navigation/ProjectsStack';
+import {AppText} from '@components/ui';
 
 const ProfileScreen = () => {
   return (
@@ -33,6 +35,10 @@ export const TabStack = () => {
       screenOptions={{
         headerShadowVisible: false,
         sceneStyle: {backgroundColor: 'white'},
+        tabBarLabel: ({children, color}) => (
+          <AppText style={{fontSize: 12, color}}>{children}</AppText>
+        ),
+        tabBarActiveTintColor: BASE_COLORS.main.primary,
       }}
       // screenOptions={({route}) => ({
       //   headerLeft: () => <BackButton />,
@@ -54,6 +60,15 @@ export const TabStack = () => {
         component={HomeScreen}
         options={{
           title: 'Главная',
+          tabBarIcon: ({focused}) => (
+            <Icon
+              name="home"
+              size={20}
+              color={
+                focused ? BASE_COLORS.main.primary : BASE_COLORS.main.primary20
+              }
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -62,12 +77,32 @@ export const TabStack = () => {
         options={{
           headerShown: false,
           title: 'Проекты',
+          tabBarIcon: ({focused}) => (
+            <Icon
+              name="rows"
+              size={20}
+              color={
+                focused ? BASE_COLORS.main.primary : BASE_COLORS.main.primary20
+              }
+            />
+          ),
         }}
       />
       <Tab.Screen
         name={SCREEN_NAMES.ReportsScreen}
         component={ReportsScreen}
-        options={{title: 'Отчеты'}}
+        options={{
+          title: 'Отчеты',
+          tabBarIcon: ({focused}) => (
+            <Icon
+              name="log"
+              size={20}
+              color={
+                focused ? BASE_COLORS.main.primary : BASE_COLORS.main.primary20
+              }
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
