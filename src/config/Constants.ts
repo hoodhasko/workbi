@@ -1,6 +1,7 @@
 export const BASE_COLORS = {
   main: {
     primary: 'rgba(46, 50, 52, 1)',
+    primary20: 'rgba(46, 50, 52, 0.2)',
     secondary: 'rgba(93, 115, 126, 1)',
     accent: 'rgba(255, 107, 107, 1)',
     white: 'rgba(255, 255, 255, 1)',
