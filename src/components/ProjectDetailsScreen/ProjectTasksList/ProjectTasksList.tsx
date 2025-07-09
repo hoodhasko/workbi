@@ -2,8 +2,9 @@ import {FC} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {AppText} from '@components/ui';
-import {BASE_COLORS, Task} from '@config/Constants';
+import {BASE_COLORS} from '@config/Constants';
 import {TaskCard} from '../TaskCard';
+import {Task} from '@app/store';
 
 interface ProjectTasksListProps {
   tasks: Task[];

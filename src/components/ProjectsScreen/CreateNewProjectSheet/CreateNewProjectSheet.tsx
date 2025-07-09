@@ -1,5 +1,16 @@
-import {forwardRef, useImperativeHandle, useMemo, useRef} from 'react';
-import {Keyboard, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import BottomSheet, {
   BottomSheetFooter,
   BottomSheetProps,
@@ -8,6 +19,7 @@ import BottomSheet, {
 
 import {BASE_COLORS} from '@config/Constants';
 import {AppText, CustomBottomSheetInput} from '@components/ui';
+import {Project, useProjectStore} from '@app/store';
 
 interface CreateNewProjectSheetProps
   extends Omit<BottomSheetProps, 'children'> {}
@@ -16,10 +28,41 @@ export const CreateNewProjectSheet = forwardRef<
   BottomSheet,
   CreateNewProjectSheetProps
 >((props, ref) => {
+  const [name, setName] = useState<string>('');
+  const [rate, setRate] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const addProject = useProjectStore(state => state.addProject);
+
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['60%'], []);
 
   useImperativeHandle(ref, () => bottomSheetRef.current!, []);
+
+  const addProjectHandler = () => {
+    setLoading(true);
+
+    Keyboard.dismiss();
+
+    setTimeout(() => {
+      addProject({
+        id: Date.now(),
+        name,
+        description,
+        rate: Number(rate),
+        tasks: [],
+      });
+
+      setLoading(false);
+
+      bottomSheetRef.current?.close();
+
+      setName('');
+      setRate('');
+      setDescription('');
+    }, 1000);
+  };
 
   return (
     <BottomSheet
@@ -37,10 +80,7 @@ export const CreateNewProjectSheet = forwardRef<
             bottomInset={12}
             style={{paddingHorizontal: 12}}>
             <TouchableOpacity
-              onPress={() => {
-                Keyboard.dismiss();
-                setTimeout(() => bottomSheetRef.current?.close(), 1000);
-              }}
+              onPress={addProjectHandler}
               style={{
                 backgroundColor: BASE_COLORS.main.primary,
                 padding: 12,
@@ -48,16 +88,33 @@ export const CreateNewProjectSheet = forwardRef<
                 width: '100%',
                 alignItems: 'center',
               }}>
-              <AppText style={styles.addButtonText}>Добавить</AppText>
+              {loading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <AppText style={styles.addButtonText}>Добавить</AppText>
+              )}
             </TouchableOpacity>
           </BottomSheetFooter>
         );
       }}
       {...props}>
       <BottomSheetView style={styles.contentContainer}>
-        <CustomBottomSheetInput label="Название" />
-        <CustomBottomSheetInput label="Описание" />
-        <CustomBottomSheetInput label="Ставка" />
+        <CustomBottomSheetInput
+          label="Название"
+          value={name}
+          onChangeText={setName}
+        />
+        <CustomBottomSheetInput
+          label="Описание"
+          value={description}
+          onChangeText={setDescription}
+        />
+        <CustomBottomSheetInput
+          label="Ставка"
+          value={rate}
+          onChangeText={setRate}
+          inputMode="numeric"
+        />
       </BottomSheetView>
     </BottomSheet>
   );

@@ -6,15 +6,16 @@ import BottomSheet, {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 import {CreateNewProjectSheet, ProjectCard} from '@components/ProjectsScreen';
 import {Layout} from '@components/ui';
 import {TabStackParamList} from '@navigation/types';
-import {PROJECTS_DATA} from '@config/Constants';
+import {useProjectStore} from '@app/store';
 
 export const ProjectsScreen: FC = () => {
+  const projects = useProjectStore(state => state.projects);
+
   const navigation = useNavigation<NavigationProp<TabStackParamList>>();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const goToProjectDetails = (id: number, title: string) => {
-    console.log('first');
     navigation.navigate('ProjectsStack', {
       screen: 'ProjectDetailsScreen',
       params: {
@@ -30,7 +31,7 @@ export const ProjectsScreen: FC = () => {
         <ScrollView
           contentContainerStyle={styles.container}
           onScrollBeginDrag={() => bottomSheetRef.current?.close()}>
-          {PROJECTS_DATA.map(project => (
+          {projects.map(project => (
             <TouchableOpacity
               onPress={() => goToProjectDetails(project.id, project.name)}
               key={project.id}>

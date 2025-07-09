@@ -4,12 +4,12 @@ import {StyleSheet, View} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {Layout} from '@components/ui';
-import {PROJECTS_DATA} from '@config/Constants';
 import {ProjectsStackParamList} from '@navigation/types';
 import {
   ProjectDetailsHeader,
   ProjectTasksList,
 } from '@components/ProjectDetailsScreen';
+import {selectProjectById, useProjectStore} from '@app/store';
 
 interface ProjectDetailsScreenProps
   extends NativeStackScreenProps<
@@ -22,7 +22,7 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
 }) => {
   const {id, title} = route.params;
 
-  const project = PROJECTS_DATA.find(project => project.id === id);
+  const project = useProjectStore(state => selectProjectById(state, id));
 
   if (!project) return null;
 
