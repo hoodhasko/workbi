@@ -51,6 +51,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 1,
         name: 'Task 1',
         status: 'backlog',
+        rate: 50,
       },
       {
         id: 2,

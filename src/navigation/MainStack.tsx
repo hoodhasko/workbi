@@ -2,8 +2,6 @@ import React, {FC} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {AppStackParamList} from '@navigation/types';
-import {SCREEN_NAMES} from '@config/Constants';
-import {Text, View} from 'react-native';
 import {TabStack} from '@navigation/TabStack';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();

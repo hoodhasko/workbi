@@ -12,19 +12,9 @@ import {TabStackParamList} from '@navigation/types';
 // } from '@components/navigation';
 import {BASE_COLORS, SCREEN_NAMES} from '@config/Constants';
 
-import {styles} from './style';
-import {Text, View} from 'react-native';
 import {HomeScreen, ProjectsScreen, ReportsScreen} from '@screens/index';
 import {ProjectsStack} from '@navigation/ProjectsStack';
 import {AppText} from '@components/ui';
-
-const ProfileScreen = () => {
-  return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <Text>ProfileScreen</Text>
-    </View>
-  );
-};
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 

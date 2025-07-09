@@ -1,14 +1,17 @@
-import {FC} from 'react';
+import {FC, useRef} from 'react';
 import {ScrollView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import BottomSheet, {TouchableWithoutFeedback} from '@gorhom/bottom-sheet';
 
-import {ProjectCard} from '@components/ProjectsScreen';
+import {CreateNewProjectSheet, ProjectCard} from '@components/ProjectsScreen';
 import {Layout} from '@components/ui';
 import {TabStackParamList} from '@navigation/types';
 import {PROJECTS_DATA} from '@config/Constants';
 
 export const ProjectsScreen: FC = () => {
   const navigation = useNavigation<NavigationProp<TabStackParamList>>();
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const goToProjectDetails = (id: number, title: string) => {
     console.log('first');
@@ -23,19 +26,27 @@ export const ProjectsScreen: FC = () => {
 
   return (
     <Layout style={styles.layout}>
-      <ScrollView contentContainerStyle={styles.container}>
-        {PROJECTS_DATA.map(project => (
-          <TouchableOpacity
-            onPress={() => goToProjectDetails(project.id, project.name)}
-            key={project.id}>
-            <ProjectCard project={project} />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <TouchableWithoutFeedback onPress={() => bottomSheetRef.current?.close()}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          onScrollBeginDrag={() => bottomSheetRef.current?.close()}>
+          {PROJECTS_DATA.map(project => (
+            <TouchableOpacity
+              onPress={() => goToProjectDetails(project.id, project.name)}
+              key={project.id}>
+              <ProjectCard project={project} />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </TouchableWithoutFeedback>
 
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText}>Add project</Text>
+      <TouchableOpacity
+        onPress={() => bottomSheetRef.current?.snapToPosition('60%')}
+        style={styles.addButton}>
+        <Text style={styles.addButtonText}>Добавить проект</Text>
       </TouchableOpacity>
+
+      <CreateNewProjectSheet ref={bottomSheetRef} />
     </Layout>
   );
 };
@@ -61,5 +72,11 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: 'white',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 12,
+    alignItems: 'center',
+    gap: 8,
   },
 });
