@@ -47,11 +47,11 @@ export const CreateNewProjectSheet = forwardRef<
 
     setTimeout(() => {
       addProject({
-        id: Date.now(),
+        id: Date.now().toString(),
         name,
         description,
         rate: Number(rate),
-        tasks: [],
+        tasksCount: 0,
       });
 
       setLoading(false);

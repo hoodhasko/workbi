@@ -3,8 +3,9 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from '@react-native-vector-icons/octicons';
 
 import {AppText} from '@components/ui';
-import {BASE_COLORS, Task} from '@config/Constants';
+import {BASE_COLORS} from '@config/Constants';
 import {TaskCardInfoItem} from './TaskCardInfoItem';
+import {Task, useProjectStore} from '@app/store';
 
 interface TaskCardProps {
   task: Task;
@@ -12,6 +13,8 @@ interface TaskCardProps {
 }
 
 export const TaskCard: FC<TaskCardProps> = ({task, projectRate}) => {
+  const startTask = useProjectStore(state => state.startTask);
+
   return (
     <View style={styles.card}>
       <View>
@@ -27,7 +30,9 @@ export const TaskCard: FC<TaskCardProps> = ({task, projectRate}) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.playButton}>
+      <TouchableOpacity
+        onPress={() => startTask(task.id)}
+        style={styles.playButton}>
         <Icon name="play" size={24} color={BASE_COLORS.main.accent} />
       </TouchableOpacity>
     </View>

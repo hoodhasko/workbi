@@ -35,7 +35,7 @@ export const ProjectCard: FC<ProjectCardProps> = ({project}) => {
       <View style={styles.infoContainer}>
         <ProjectCardInfoItem
           label="Задач"
-          value={project.tasks.length.toString()}
+          value={project.tasksCount.toString()}
         />
         <ProjectCardInfoItem label="Ставка" value={project.rate.toString()} />
       </View>

@@ -1,9 +1,9 @@
 import {FC} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {Layout} from '@components/ui';
+import {AppText, Layout} from '@components/ui';
 import {ProjectsStackParamList} from '@navigation/types';
 import {
   ProjectDetailsHeader,
@@ -23,6 +23,10 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
   const {id, title} = route.params;
 
   const project = useProjectStore(state => selectProjectById(state, id));
+  const tasks = useProjectStore(state => state.tasks);
+  const createTask = useProjectStore(state => state.createTask);
+
+  console.log('TASKS', tasks);
 
   if (!project) return null;
 
@@ -31,8 +35,24 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
       <ProjectDetailsHeader projectName={title} />
 
       <View style={{paddingHorizontal: 12, marginTop: 20}}>
-        <ProjectTasksList tasks={project.tasks} projectRate={project.rate} />
+        <ProjectTasksList
+          tasks={tasks.filter(t => t.projectId === id)}
+          projectRate={project.rate}
+        />
       </View>
+
+      <TouchableOpacity
+        onPress={() =>
+          createTask({
+            projectId: id,
+            name: 'New Task 4',
+            status: 'todo',
+            accumulatedTime: 0,
+            id: Date.now().toString(),
+          })
+        }>
+        <AppText>Добавить задачу</AppText>
+      </TouchableOpacity>
     </Layout>
   );
 };

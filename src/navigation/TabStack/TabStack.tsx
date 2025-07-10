@@ -12,7 +12,7 @@ import {TabStackParamList} from '@navigation/types';
 // } from '@components/navigation';
 import {BASE_COLORS, SCREEN_NAMES} from '@config/Constants';
 
-import {HomeScreen, ProjectsScreen, ReportsScreen} from '@screens/index';
+import {HomeScreen, ReportsScreen, TimerScreen} from '@screens/index';
 import {ProjectsStack} from '@navigation/ProjectsStack';
 import {AppText} from '@components/ui';
 
@@ -70,6 +70,24 @@ export const TabStack = () => {
           tabBarIcon: ({focused}) => (
             <Icon
               name="rows"
+              size={20}
+              color={
+                focused ? BASE_COLORS.main.primary : BASE_COLORS.main.primary20
+              }
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={SCREEN_NAMES.TimerScreen}
+        component={TimerScreen}
+        options={{
+          headerShown: false,
+          title: '',
+          tabBarLabel: 'Таймер',
+          tabBarIcon: ({focused}) => (
+            <Icon
+              name="clock"
               size={20}
               color={
                 focused ? BASE_COLORS.main.primary : BASE_COLORS.main.primary20

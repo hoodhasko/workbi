@@ -6,6 +6,9 @@ import {zustandStorage} from '@app/storage';
 
 const store: StateCreator<ProjectStore> = (set, get) => ({
   projects: [],
+  tasks: [],
+  activeTask: null,
+
   addProject: project =>
     set(state => ({projects: [...state.projects, project]})),
   removeProject: id =>
@@ -14,7 +17,119 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
     set(state => ({
       projects: state.projects.map(p => (p.id === project.id ? project : p)),
     })),
-  selectProjectById: id => get().projects.find(p => p.id === id),
+
+  createTask: task =>
+    set(state => ({
+      tasks: [...state.tasks, task],
+      projects: state.projects.map(p =>
+        p.id === task.projectId ? {...p, tasksCount: p.tasksCount + 1} : p,
+      ),
+    })),
+  updateTask: task =>
+    set(state => ({
+      tasks: state.tasks.map(t => (t.id === task.id ? task : t)),
+    })),
+  deleteTask: taskId =>
+    set(state => ({
+      tasks: state.tasks.filter(t => t.id !== taskId),
+      projects: state.projects.map(p =>
+        p.id === taskId ? {...p, tasksCount: p.tasksCount - 1} : p,
+      ),
+    })),
+
+  startTask: taskId => {
+    const {tasks, activeTask} = get();
+
+    if (activeTask && activeTask.id === taskId) return;
+
+    if (activeTask && !activeTask.isPaused) {
+      const totalAccumulatedTime =
+        activeTask.accumulatedTime +
+        Math.floor((Date.now() - activeTask.startedAt) / 1000);
+
+      set({
+        tasks: tasks.map(t => {
+          if (t.id === activeTask.id) {
+            return {
+              ...t,
+              accumulatedTime: totalAccumulatedTime,
+            };
+          }
+          return t;
+        }),
+      });
+    }
+
+    const task = tasks.find(t => t.id === taskId);
+
+    if (task) {
+      set({
+        activeTask: {
+          ...task,
+          isPaused: false,
+          startedAt: Date.now(),
+        },
+      });
+    }
+  },
+  togglePause: () => {
+    const {activeTask} = get();
+
+    if (!activeTask) return;
+
+    const updatedActiveTask = {...activeTask};
+
+    if (!activeTask.isPaused) {
+      const elapsed = Math.floor((Date.now() - activeTask.startedAt) / 1000);
+
+      updatedActiveTask.isPaused = true;
+      updatedActiveTask.accumulatedTime += elapsed;
+    } else {
+      updatedActiveTask.isPaused = false;
+      updatedActiveTask.startedAt = Date.now();
+    }
+
+    set({
+      activeTask: updatedActiveTask,
+    });
+  },
+  stopTimer: () => {
+    const {activeTask, tasks} = get();
+
+    if (!activeTask) return;
+
+    const totalAccumulatedTime =
+      activeTask.accumulatedTime +
+      Math.floor((Date.now() - activeTask.startedAt) / 1000);
+
+    set(() => ({
+      activeTask: null,
+      tasks: tasks.map(t => {
+        if (t.id === activeTask.id) {
+          return {
+            ...t,
+            accumulatedTime: totalAccumulatedTime,
+          };
+        }
+        return t;
+      }),
+    }));
+  },
+  updateActiveTaskTime: time =>
+    set(state => {
+      if (state.activeTask) {
+        return {
+          activeTask: {
+            ...state.activeTask,
+            accumulatedTime: state.activeTask.accumulatedTime + time,
+          },
+        };
+      }
+      return {};
+    }),
+
+  getProjectTasks: projectId =>
+    get().tasks.filter(t => t.projectId === projectId),
 });
 
 export const useProjectStore = create<ProjectStore>()(
@@ -24,5 +139,5 @@ export const useProjectStore = create<ProjectStore>()(
   }),
 );
 
-export const selectProjectById = (state: ProjectStore, id: number) =>
-  state.projects.find(p => p.id === id);
+export const selectProjectById = (state: ProjectStore, projectId: string) =>
+  state.projects.find(p => p.id === projectId);

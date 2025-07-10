@@ -15,7 +15,7 @@ export const ProjectsScreen: FC = () => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const goToProjectDetails = (id: number, title: string) => {
+  const goToProjectDetails = (id: string, title: string) => {
     navigation.navigate('ProjectsStack', {
       screen: 'ProjectDetailsScreen',
       params: {

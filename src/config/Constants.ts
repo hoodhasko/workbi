@@ -24,6 +24,7 @@ export const SCREEN_NAMES = {
   ProjectDetailsScreen: 'ProjectDetailsScreen',
   TasksScreen: 'TasksScreen',
   TaskScreen: 'TaskScreen',
+  TimerScreen: 'TimerScreen',
 } as const;
 
 export const TABBAR_HEIGHT = 72;

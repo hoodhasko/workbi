@@ -16,6 +16,7 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> =
 export type TabStackParamList = {
   [SCREEN_NAMES.HomeScreen]: undefined;
   ProjectsStack: NavigatorScreenParams<ProjectsStackParamList>;
+  [SCREEN_NAMES.TimerScreen]: undefined;
   [SCREEN_NAMES.ReportsScreen]: undefined;
 };
 
@@ -27,7 +28,7 @@ export type TabStackScreenProps<T extends keyof TabStackParamList> =
 
 export type ProjectsStackParamList = {
   [SCREEN_NAMES.ProjectsScreen]: undefined;
-  [SCREEN_NAMES.ProjectDetailsScreen]: {id: number; title: string};
+  [SCREEN_NAMES.ProjectDetailsScreen]: {id: string; title: string};
   [SCREEN_NAMES.TasksScreen]: undefined;
   [SCREEN_NAMES.TaskScreen]: undefined;
 };
