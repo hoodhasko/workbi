@@ -47,6 +47,9 @@ export const ProjectsStack = () => {
       <Stack.Screen
         name={SCREEN_NAMES.ProjectDetailsScreen}
         component={ProjectDetailsScreen}
+        options={{
+          title: '',
+        }}
       />
     </Stack.Navigator>
   );

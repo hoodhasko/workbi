@@ -1,8 +1,9 @@
 import {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import {BASE_COLORS, Project} from '@config/Constants';
+import {BASE_COLORS} from '@config/Constants';
 import {AppText} from '@components/ui';
+import {Project} from '@app/store';
 
 interface ProjectCardProps {
   project: Project;
@@ -28,15 +29,13 @@ export const ProjectCard: FC<ProjectCardProps> = ({project}) => {
       <AppText style={styles.title}>{project.name}</AppText>
 
       <AppText style={styles.description} numberOfLines={2}>
-        {
-          'Описание проекта какое-то возможно нужно или нет непонятно, но пока что оставлю для наполненности карточки '
-        }
+        {project.description}
       </AppText>
 
       <View style={styles.infoContainer}>
         <ProjectCardInfoItem
           label="Задач"
-          value={project.tasks.length.toString()}
+          value={project.tasksCount.toString()}
         />
         <ProjectCardInfoItem label="Ставка" value={project.rate.toString()} />
       </View>
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#2E3234',
+    color: BASE_COLORS.main.primary,
   },
   description: {
     color: BASE_COLORS.main.secondary,
