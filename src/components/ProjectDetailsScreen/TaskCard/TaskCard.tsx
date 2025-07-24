@@ -6,6 +6,8 @@ import {AppText} from '@components/ui';
 import {BASE_COLORS} from '@config/Constants';
 import {TaskCardInfoItem} from './TaskCardInfoItem';
 import {Task, useProjectStore} from '@app/store';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {TabStackParamList} from '@navigation/types';
 
 interface TaskCardProps {
   task: Task;
@@ -15,8 +17,19 @@ interface TaskCardProps {
 export const TaskCard: FC<TaskCardProps> = ({task, projectRate}) => {
   const startTask = useProjectStore(state => state.startTask);
 
+  const navigation = useNavigation<NavigationProp<TabStackParamList>>();
+
+  const startTaskHandle = () => {
+    startTask(task.id);
+    navigation.navigate('TimerScreen');
+  };
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      onPress={() => {
+        console.log(task.name);
+      }}
+      style={styles.card}>
       <View>
         <AppText style={styles.taskName}>{task.name}</AppText>
 
@@ -30,12 +43,10 @@ export const TaskCard: FC<TaskCardProps> = ({task, projectRate}) => {
         </View>
       </View>
 
-      <TouchableOpacity
-        onPress={() => startTask(task.id)}
-        style={styles.playButton}>
+      <TouchableOpacity onPress={startTaskHandle} style={styles.playButton}>
         <Icon name="play" size={24} color={BASE_COLORS.main.accent} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

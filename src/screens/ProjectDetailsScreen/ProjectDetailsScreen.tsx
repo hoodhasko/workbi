@@ -1,11 +1,12 @@
-import {FC} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-
+import {FC, useRef} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import BottomSheet from '@gorhom/bottom-sheet';
 
-import {AppText, Layout} from '@components/ui';
+import {Layout} from '@components/ui';
 import {ProjectsStackParamList} from '@navigation/types';
 import {
+  CreateNewTaskSheet,
   ProjectDetailsHeader,
   ProjectTasksList,
 } from '@components/ProjectDetailsScreen';
@@ -23,10 +24,8 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
   const {id, title} = route.params;
 
   const project = useProjectStore(state => selectProjectById(state, id));
-  const tasks = useProjectStore(state => state.tasks);
-  const createTask = useProjectStore(state => state.createTask);
 
-  console.log('TASKS', tasks);
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   if (!project) return null;
 
@@ -34,25 +33,19 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
     <Layout style={styles.layout}>
       <ProjectDetailsHeader projectName={title} />
 
-      <View style={{paddingHorizontal: 12, marginTop: 20}}>
+      <View
+        style={{
+          paddingHorizontal: 12,
+          marginTop: 12,
+          flex: 1,
+        }}>
         <ProjectTasksList
-          tasks={tasks.filter(t => t.projectId === id)}
+          projectId={id}
           projectRate={project.rate}
+          onAddTaskPress={() => bottomSheetRef.current?.snapToPosition('45%')}
         />
       </View>
-
-      <TouchableOpacity
-        onPress={() =>
-          createTask({
-            projectId: id,
-            name: 'New Task 4',
-            status: 'todo',
-            accumulatedTime: 0,
-            id: Date.now().toString(),
-          })
-        }>
-        <AppText>Добавить задачу</AppText>
-      </TouchableOpacity>
+      <CreateNewTaskSheet ref={bottomSheetRef} projectId={id} />
     </Layout>
   );
 };
