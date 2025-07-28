@@ -29,22 +29,21 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
 
   if (!project) return null;
 
+  const openCreateTaskSheet = () =>
+    bottomSheetRef.current?.snapToPosition('45%');
+
   return (
     <Layout style={styles.layout}>
       <ProjectDetailsHeader projectName={title} />
 
-      <View
-        style={{
-          paddingHorizontal: 12,
-          marginTop: 12,
-          flex: 1,
-        }}>
+      <View style={styles.listContainer}>
         <ProjectTasksList
           projectId={id}
           projectRate={project.rate}
-          onAddTaskPress={() => bottomSheetRef.current?.snapToPosition('45%')}
+          onAddTaskPress={openCreateTaskSheet}
         />
       </View>
+
       <CreateNewTaskSheet ref={bottomSheetRef} projectId={id} />
     </Layout>
   );
@@ -53,5 +52,10 @@ export const ProjectDetailsScreen: FC<ProjectDetailsScreenProps> = ({
 const styles = StyleSheet.create({
   layout: {
     padding: 0,
+  },
+  listContainer: {
+    paddingHorizontal: 12,
+    marginTop: 12,
+    flex: 1,
   },
 });

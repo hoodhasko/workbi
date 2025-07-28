@@ -1,3 +1,4 @@
+import {useMemo} from 'react';
 import {create, StateCreator} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 
@@ -7,6 +8,7 @@ import {zustandStorage} from '@app/storage';
 const store: StateCreator<ProjectStore> = (set, get) => ({
   projects: [],
   tasks: [],
+  filteredTasks: [],
   activeTask: null,
 
   addProject: project =>
@@ -129,7 +131,9 @@ const store: StateCreator<ProjectStore> = (set, get) => ({
     }),
 
   getProjectTasks: projectId =>
-    get().tasks.filter(t => t.projectId === projectId),
+    set({
+      filteredTasks: get().tasks.filter(t => t.projectId === projectId),
+    }),
 });
 
 export const useProjectStore = create<ProjectStore>()(
@@ -141,3 +145,14 @@ export const useProjectStore = create<ProjectStore>()(
 
 export const selectProjectById = (state: ProjectStore, projectId: string) =>
   state.projects.find(p => p.id === projectId);
+
+export const selectTasksByProject = (state: ProjectStore, projectId: string) =>
+  state.tasks.filter(task => task.projectId === projectId);
+
+export const useTasksByProjectId = (projectId: string) => {
+  const tasks = useProjectStore(state => state.tasks);
+  return useMemo(
+    () => tasks.filter(t => t.projectId === projectId),
+    [tasks, projectId],
+  );
+};

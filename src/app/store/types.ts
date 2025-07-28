@@ -27,6 +27,7 @@ export interface Project {
 export interface ProjectStore {
   projects: Project[];
   tasks: Task[];
+  filteredTasks: Task[];
   activeTask: ActiveTask | null;
 
   addProject: (project: Project) => void;
@@ -43,5 +44,5 @@ export interface ProjectStore {
 
   updateActiveTaskTime: (time: number) => void;
 
-  getProjectTasks: (projectId: string) => Task[];
+  getProjectTasks: (projectId: string) => void;
 }

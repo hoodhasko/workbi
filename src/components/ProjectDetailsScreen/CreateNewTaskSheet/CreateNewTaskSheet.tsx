@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import BottomSheet, {
+  BottomSheetBackdrop,
   BottomSheetFooter,
   BottomSheetProps,
   BottomSheetView,
@@ -73,6 +74,9 @@ export const CreateNewTaskSheet = forwardRef<
       keyboardBehavior="fillParent"
       android_keyboardInputMode="adjustResize"
       index={-1}
+      backdropComponent={props => (
+        <BottomSheetBackdrop {...props} style={{backgroundColor: 'black'}} />
+      )}
       footerComponent={props => {
         return (
           <BottomSheetFooter

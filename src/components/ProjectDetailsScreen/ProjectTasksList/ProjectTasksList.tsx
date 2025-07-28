@@ -1,4 +1,4 @@
-import {FC, useCallback, useEffect, useRef, useState} from 'react';
+import {FC, useCallback, useRef, useState} from 'react';
 import {
   Animated,
   NativeScrollEvent,
@@ -12,7 +12,7 @@ import {
 import {AppText, MainButton} from '@components/ui';
 import {BASE_COLORS} from '@config/Constants';
 import {TaskCard} from '../TaskCard';
-import {Task, useProjectStore} from '@app/store';
+import {useTasksByProjectId} from '@app/store';
 
 interface ProjectTasksListProps {
   projectId: string;
@@ -27,13 +27,8 @@ export const ProjectTasksList: FC<ProjectTasksListProps> = ({
   scrollViewProps,
 }) => {
   const [showBottomButton, setShowBottomButton] = useState(false);
-  const [tasks, setTasks] = useState<Array<Task>>([]);
 
-  const getProjectTasks = useProjectStore(state => state.getProjectTasks);
-
-  useEffect(() => {
-    setTasks(getProjectTasks(projectId));
-  }, [projectId, getProjectTasks]);
+  const tasks = useTasksByProjectId(projectId);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeAnimFloat = useRef(new Animated.Value(1)).current;
@@ -103,7 +98,9 @@ export const ProjectTasksList: FC<ProjectTasksListProps> = ({
         {...scrollViewProps}
         onScroll={handleScroll}>
         {tasks.map(task => {
-          return <TaskCard task={task} projectRate={projectRate} />;
+          return (
+            <TaskCard key={task.id} task={task} projectRate={projectRate} />
+          );
         })}
       </ScrollView>
 
